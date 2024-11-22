@@ -1,0 +1,21 @@
+Crea la Base de Datos y Tabla: Ejecuta las siguientes consultas en MySQL Workbench, phpMyAdmin, o desde la terminal:
+
+CREATE DATABASE luchacriolla;
+
+USE luchacriolla;
+
+CREATE TABLE cartas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL,
+    nivel_poder INT NOT NULL
+);
+
+INSERT INTO cartas (nombre, nivel_poder) VALUES
+('Gaucho', 8),
+('Mate', 6),
+('Ricardo Fort', 7),
+('Darin', 9),
+('Maradona', 10),
+('Obelisco', 5),
+('Porcel Jr', 4),
+('Termidor', 3);

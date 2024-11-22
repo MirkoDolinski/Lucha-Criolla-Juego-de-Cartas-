@@ -1,0 +1,21 @@
+1. Configura Visual Studio Code para Java
+
+Instala Java: Asegúrate de que tienes instalado:
+
+JDK (Java Development Kit): Descarga desde Oracle o usa OpenJDK.
+
+
+2. Instala las Extensiones de Java:
+
+En VS Code, ve a la pestaña de Extensiones (Ctrl+Shift+X) y busca:
+
+"Extension Pack for Java" (contiene soporte para Java, Maven, Debugger, etc.)
+Instálala.
+
+
+3. Configura el PATH:
+
+Asegúrate de que la variable de entorno JAVA_HOME está configurada correctamente.
+
+Verifica la instalación con el comando:
+java -version
