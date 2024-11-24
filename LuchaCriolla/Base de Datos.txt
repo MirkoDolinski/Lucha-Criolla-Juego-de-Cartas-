@@ -1,0 +1,79 @@
+Crea la Base de Datos y Tabla: Ejecuta las siguientes consultas en MySQL Workbench, phpMyAdmin, o desde la terminal:
+
+-- Crear la base de datos
+CREATE DATABASE IF NOT EXISTS luchacriolla;
+USE luchacriolla;
+
+-- Crear la tabla cartas
+CREATE TABLE IF NOT EXISTS cartas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50) NOT NULL,
+    nivel_poder INT NOT NULL,
+    tipo VARCHAR(50),
+    descripcion TEXT,
+    efecto VARCHAR(100)
+);
+
+-- Crear la tabla cartas_auditoria
+CREATE TABLE IF NOT EXISTS cartas_auditoria (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    carta_id INT NOT NULL,
+    nombre VARCHAR(50),
+    nivel_poder INT,
+    tipo VARCHAR(50),
+    descripcion TEXT,
+    efecto VARCHAR(100),
+    fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (carta_id) REFERENCES cartas(id)
+);
+
+-- Crear la tabla historial_partidas
+CREATE TABLE IF NOT EXISTS historial_partidas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
+    jugador VARCHAR(50),
+    resultado VARCHAR(20)
+);
+
+-- Insertar todas las cartas como iniciales
+INSERT INTO cartas (nombre, nivel_poder, tipo, descripcion, efecto) VALUES
+('Gaucho', 8, 'Ataque', 'Un guerrero con gran poder', 'Duplica el poder en la siguiente ronda'),
+('Mate', 6, 'Defensa', 'Bebida que otorga energía', 'Reduce el daño en la siguiente ronda'),
+('Ricardo Fort', 7, 'Ataque', 'Famoso por su estilo único', 'Aumenta 2 puntos de poder'),
+('Darin', 9, 'Ataque', 'Poderoso luchador', 'Hace que el oponente pierda 1 carta'),
+('Maradona', 10, 'Ataque', 'Leyenda del fútbol', 'Gana 1 carta extra al ganar una ronda'),
+('Obelisco', 5, 'Defensa', 'Un monumento emblemático', 'Rechaza un ataque de 5 puntos'),
+('Porcel Jr', 4, 'Defensa', 'Hijo del gran comediante', 'Reduce el poder del oponente en 2 puntos'),
+('Termidor', 3, 'Ataque', 'Insecto gigante', 'Aumenta el poder en un 10% después de usarlo'),
+('El Zorro', 8, 'Ataque', 'Un luchador astuto y habilidoso', 'Gana 2 puntos extra de poder al jugarlo'),
+('La Pampa', 7, 'Defensa', 'Representa la vastedad de la región pampeana', 'Reduce el poder del oponente en 3 puntos'),
+('CFK', 9, 'Ataque', 'Te roba y no te das cuenta', 'Aumenta 3 puntos de poder en la siguiente ronda'),
+('Baile Turro', 6, 'Defensa', 'Baile que reduce el estrés y aumenta la concentración', 'Reduce el daño en la siguiente ronda en 2 puntos'),
+('Callejero Grueso', 10, 'Ataque', 'Un cantante con voz inconfundible', 'Elimina una carta del oponente después de ganar la ronda'),
+('Los Andes', 5, 'Defensa', 'La cadena montañosa más importante de Sudamérica', 'Rechaza un ataque de 4 puntos'),
+('El Monumental', 7, 'Ataque', 'El estadio más famoso de Argentina', 'Gana 1 carta extra al ganar una ronda');
+
+-- Crear trigger para auditoría
+DELIMITER $$
+
+CREATE TRIGGER after_insert_cartas
+AFTER INSERT ON cartas
+FOR EACH ROW
+BEGIN
+    INSERT INTO cartas_auditoria (carta_id, nombre, nivel_poder, tipo, descripcion, efecto)
+    VALUES (NEW.id, NEW.nombre, NEW.nivel_poder, NEW.tipo, NEW.descripcion, NEW.efecto);
+END $$
+
+DELIMITER ;
+
+-- Crear procedimiento para obtener cartas de poder alto
+DELIMITER $$
+
+CREATE PROCEDURE obtener_cartas_poder_alto(IN min_poder INT)
+BEGIN
+    SELECT * 
+    FROM cartas
+    WHERE nivel_poder > min_poder;
+END $$
+
+DELIMITER ;
